@@ -1,60 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden { display: none; }
+        .active { background-color: #007bff; color: white; }
+        #error-message { /* Style for error messages */
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo">
-      <img src="C:\Users\Rudransh234\login-backend\client\logo.png" alt="Logo">
+    <div class="login-container">
+        <div class="logo">
+            <img src="images/logo.png" alt="Logo">
+        </div>
+        <div class="form-container">
+            <h2>Login Page</h2>
+            <p>Sign in to continue to Leisure Loan</p>
+            <form id="loginForm" action="/api/auth/login" method="POST">
+                <div class="input-group">
+                    <label for="phoneorEmail">Phone Number or Email</label>
+                    <input type="text" id="phoneorEmail" name="phoneorEmail" placeholder="Enter your phone number or email" required>
+                </div>
+                <div class="toggle-option">
+                    <button type="button" id="password-btn" class="active">Password Login</button>
+                    <button type="button" id="otp-btn">OTP Login</button>
+                </div>
+                <div class="input-group" id="password-input">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="input-group hidden" id="otp-input">
+                    <label for="otp">OTP</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP">
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div id="error-message" class="hidden"></div> </form>
+            <p class="small-text">New here? <a href="register.html">Register Yourself</a></p>
+        </div>
     </div>
-    <div class="form-container">
-      <h2>Login Page</h2>
-      <p>Sign in to continue to Leisure Loan</p>
-      <form action="/api/auth/login">
-        <div class="input-group">
-          <label for="phone-email">Phone Number or Email</label>
-          <input type="text" id="phone-email" name="phone-email" placeholder="Enter your phone number or email" required>
-        </div>
-        <div class="toggle-option">
-          <button type="button" id="password-btn" class="active">Password Login</button>
-          <button type="button" id="otp-btn">OTP Login</button>
-        </div>
-        <div class="input-group" id="password-input">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        </div>
-        <div class="input-group hidden" id="otp-input">
-          <label for="otp">OTP</label>
-          <input type="text" id="otp" name="otp" placeholder="Enter OTP">
-        </div>
-        <button type="submit" class="login-btn">Login</button>
-      </form>
-      <p class="small-text">New here? <a href="register.html">Register Yourself</a></p>
-    </div>
-  </div>
-  <script>
-    const passwordBtn = document.getElementById("password-btn");
-    const otpBtn = document.getElementById("otp-btn");
-    const passwordInput = document.getElementById("password-input");
-    const otpInput = document.getElementById("otp-input");
 
-    passwordBtn.addEventListener("click", () => {
-      passwordInput.classList.remove("hidden");
-      otpInput.classList.add("hidden");
-      passwordBtn.classList.add("active");
-      otpBtn.classList.remove("active");
-    });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordBtn = document.getElementById("password-btn");
+            const otpBtn = document.getElementById("otp-btn");
+            const passwordInput = document.getElementById("password-input");
+            const otpInput = document.getElementById("otp-input");
+            const form = document.getElementById("loginForm");
+            const errorMessage = document.getElementById("error-message");
 
-    otpBtn.addEventListener("click", () => {
-      otpInput.classList.remove("hidden");
-      passwordInput.classList.add("hidden");
-      otpBtn.classList.add("active");
-      passwordBtn.classList.remove("active");
-    });
-  </script>
+            passwordBtn.addEventListener("click", () => {
+                passwordInput.classList.remove("hidden");
+                otpInput.classList.add("hidden");
+                passwordBtn.classList.add("active");
+                otpBtn.classList.remove("active");
+                document.getElementById("password").required = true;
+                document.getElementById("otp").required = false;
+            });
+
+            otpBtn.addEventListener("click", () => {
+                otpInput.classList.remove("hidden");
+                passwordInput.classList.add("hidden");
+                otpBtn.classList.add("active");
+                passwordBtn.classList.remove("active");
+                document.getElementById("password").required = false;
+                document.getElementById("otp").required = true;
+            });
+
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                errorMessage.classList.add("hidden"); // Hide previous errors
+
+                const isPasswordLogin = passwordBtn.classList.contains("active");
+                const formData = {
+                    phoneorEmail: document.getElementById("phoneorEmail").value
+                };
+
+                if (isPasswordLogin) {
+                    formData.password = document.getElementById("password").value;
+                } else {
+                    formData.otp = document.getElementById("otp").value;
+                }
+
+                try {
+                    const response = await fetch("http://localhost:5000/api/auth/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        const message = errorData.message || "Login failed";
+                        throw new Error(message);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert("Login successful!");
+                        window.location.href = "home.html"; // Or wherever you want to redirect
+                    } else {
+                        errorMessage.textContent = result.message || "Login failed";
+                        errorMessage.classList.remove("hidden");
+                    }
+
+                } catch (error) {
+                    console.error("Error:", error);
+                    errorMessage.textContent = error.message || "Login failed";
+                    errorMessage.classList.remove("hidden");
+                }
+            });
+        });
+    </script>
 </body>
 </html>
