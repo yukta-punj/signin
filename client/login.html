@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <img src="C:\Users\Rudransh234\login-backend\client\logo.png" alt="Logo">
+    </div>
+    <div class="form-container">
+      <h2>Login Page</h2>
+      <p>Sign in to continue to Leisure Loan</p>
+      <form action="/api/auth/login">
+        <div class="input-group">
+          <label for="phone-email">Phone Number or Email</label>
+          <input type="text" id="phone-email" name="phone-email" placeholder="Enter your phone number or email" required>
+        </div>
+        <div class="toggle-option">
+          <button type="button" id="password-btn" class="active">Password Login</button>
+          <button type="button" id="otp-btn">OTP Login</button>
+        </div>
+        <div class="input-group" id="password-input">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <div class="input-group hidden" id="otp-input">
+          <label for="otp">OTP</label>
+          <input type="text" id="otp" name="otp" placeholder="Enter OTP">
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      <p class="small-text">New here? <a href="register.html">Register Yourself</a></p>
+    </div>
+  </div>
+  <script>
+    const passwordBtn = document.getElementById("password-btn");
+    const otpBtn = document.getElementById("otp-btn");
+    const passwordInput = document.getElementById("password-input");
+    const otpInput = document.getElementById("otp-input");
+
+    passwordBtn.addEventListener("click", () => {
+      passwordInput.classList.remove("hidden");
+      otpInput.classList.add("hidden");
+      passwordBtn.classList.add("active");
+      otpBtn.classList.remove("active");
+    });
+
+    otpBtn.addEventListener("click", () => {
+      otpInput.classList.remove("hidden");
+      passwordInput.classList.add("hidden");
+      otpBtn.classList.add("active");
+      passwordBtn.classList.remove("active");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Page</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <img src="C:\Users\Rudransh234\login-backend\client\logo.png" alt="Logo">
+    </div>
+    <div class="form-container">
+      <h2>Registration</h2>
+      <p>Register to start using Leisure Loan</p>
+      <form action="C:\Users\Rudransh234\login-backend\serc\api\auth.js">
+        <div class="input-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="input-group">
+          <label for="phone-email">Phone Number or Email</label>
+          <input type="text" id="phone-email" name="phone-email" placeholder="Enter your phone number or email" required>
+        </div>
+        <div class="toggle-option">
+          <button type="button" id="password-btn" class="active">Password Login</button>
+          <button type="button" id="otp-btn">OTP Login</button>
+        </div>
+        <div class="input-group" id="password-input">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a password" required>
+        </div>
+        <div class="input-group hidden" id="otp-input">
+          <label for="otp">OTP</label>
+          <input type="text" id="otp" name="otp" placeholder="Enter OTP">
+        </div>
+        <button type="submit" class="login-btn">Register</button>
+      </form>
+      <p class="small-text">Already registered? <a href="login.html">Login Here</a></p>
+    </div>
+  </div>
+  <script>
+    const passwordBtn = document.getElementById("password-btn");
+    const otpBtn = document.getElementById("otp-btn");
+    const passwordInput = document.getElementById("password-input");
+    const otpInput = document.getElementById("otp-input");
+
+    passwordBtn.addEventListener("click", () => {
+      passwordInput.classList.remove("hidden");
+      otpInput.classList.add("hidden");
+      passwordBtn.classList.add("active");
+      otpBtn.classList.remove("active");
+    });
+
+    otpBtn.addEventListener("click", () => {
+      otpInput.classList.remove("hidden");
+      passwordInput.classList.add("hidden");
+      otpBtn.classList.add("active");
+      passwordBtn.classList.remove("active");
+    });
+  </script>
+</body>
+</html>
